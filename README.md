@@ -1,2 +1,2 @@
 # Foodie
-Foodie-Fi Project SQL
+Foodie-Fi Project SQL Challange

@@ -1,13 +1,13 @@
 1. How many customers has Foodie-Fi ever had?
 
-SELECT  count(distinct customer_id) FROM foodie_fi.subscriptions;
+### SELECT  count(distinct customer_id) FROM foodie_fi.subscriptions;
 
 
 2 .What is the monthly distribution of trial plan start_date values for our dataset - use the start
   of the month as the group by value  --
   
   
-SELECT month(start_date) AS month_start_date, COUNT(*) AS trial_count FROM Subscriptions
+### SELECT month(start_date) AS month_start_date, COUNT(*) AS trial_count FROM Subscriptions
 JOIN Plans ON Subscriptions.plan_id = Plans.plan_id
 WHERE Plans.plan_name = 'Trial'
 GROUP BY month_start_date
@@ -19,7 +19,7 @@ ORDER BY month_start_date;
   count of events for each plan_name 
 
 
-select A.plan_id,count(*) from
+### select A.plan_id,count(*) from
 (select s.*,p.plan_name,p.price from subscriptions as s  join plans as p on 
 p.plan_id=s.plan_id WHERE start_date > '2020-12-31') A
 GROUP BY plan_id ORDER BY plan_id;
@@ -29,7 +29,7 @@ GROUP BY plan_id ORDER BY plan_id;
 4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place 
 
 
-WITH churn_cx as (
+### WITH churn_cx as (
 select s.*,p.plan_name,p.price from subscriptions as s  join plans as p on 
 p.plan_id=s.plan_id WHERE plan_name ='CHURN')
 
@@ -45,7 +45,7 @@ from churn_cx
   to the nearest whole number? -- 
 
 
-with Next_PLAN AS(
+### with Next_PLAN AS(
  SELECT *,LEAD(plan_id) over(partition by customer_id order by start_date)
  as new_plan from subscriptions )
  
@@ -59,7 +59,7 @@ FROM Next_PLAN WHERE PLAN_ID = 0 AND NeW_PLAN =4
 6.What is the number and percentage of customer plans after their initial free trial?
 
 
-select count(*) as Total_Subscription , 
+### select count(*) as Total_Subscription , 
 Round((count(*)/1000)*100,1) as Percentage_Subcribers
 from
 (select a.*,rank() over(partition by customer_id order by start_date) rnk from
@@ -75,7 +75,7 @@ where rnk > 1
 
 
 
-With Ranking_By_Date as (
+### With Ranking_By_Date as (
  select *, row_number() over(partition by customer_id order by start_date desc)
  as rnks from subscriptions where start_date <= '2020-12-31')
 
@@ -91,7 +91,7 @@ from Ranking_By_Date where rnks= 1 group by plan_id ;
 8.How many customers have upgraded to an annual plan in 2020 ?
 
 
-With CUSTOMER_Annual_Subscriptions as
+### With CUSTOMER_Annual_Subscriptions as
 (SELECT *,rank() over(partition by customer_id order by start_date desc) as rnk
  FROM foodie_fi.subscriptions where year(start_date)= 2020 )
  
@@ -104,7 +104,7 @@ where plan_id = 3 and rnk = 1 group by plan_id ;
 9.How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi? 
 
 
-with Min_Date as(
+### with Min_Date as(
  select min(start_date) as Joined_Date,customer_id from subscriptions 
  group by customer_id)
  ,Plan_ID3_Date as(
